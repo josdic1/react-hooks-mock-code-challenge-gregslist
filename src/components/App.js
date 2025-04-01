@@ -5,10 +5,27 @@ import ListingsContainer from "./ListingsContainer";
 function App() {
 
 const [listings, setListings ] = useState([])
+const [filteredListings, setFilteredListings ] = useState([])
+const [ isFiltered, setIsFiltered ] = useState(false)
 
 useEffect(() => {
   fetchListings()
 },[])
+
+
+function handleFilter(val) {
+  if(val === "") {
+    setIsFiltered(false)
+  } else {
+    setIsFiltered(true)
+    filterTheList(val)
+  }
+}
+
+const filterTheList = (val) => {
+  const updatedList = listings.filter(l => l.description === val)
+  setFilteredListings(updatedList)
+}
 
 async function fetchListings() {
   try {
@@ -31,14 +48,15 @@ async function handleDelete(idToDelete) {
     }
     const updatedList = listings.filter(l => l.id !== idToDelete)
     setListings(updatedList)
+    setFilteredListings(updatedList)
   }catch (error) {console.error("❌ Caught error:", error);}
 }
 
   return (
     <div className="app">
-      <Header />
+      <Header onFilter={handleFilter}/>
       <ListingsContainer 
-        listings={listings}
+        listings={isFiltered ? filteredListings : listings}
         onDelete={handleDelete}/>
     </div>
   );
