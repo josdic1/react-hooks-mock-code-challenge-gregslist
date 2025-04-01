@@ -1,21 +1,27 @@
-import React from "react";
+import { useState } from 'react';
+function ListingCard({listing, onDelete}) {
 
-function ListingCard() {
+  const [isLiked, setIsLiked ] = useState(false)
+
+function onLikeToggle() {
+  setIsLiked(!isLiked)
+}
+
   return (
     <li className="card">
       <div className="image">
         <span className="price">$0</span>
-        <img src={"https://via.placeholder.com/300x300"} alt={"description"} />
+        <img src={listing.image} alt={"description"} />
       </div>
       <div className="details">
-        {true ? (
-          <button className="emoji-button favorite active">★</button>
+        {isLiked ? (
+          <button onClick={onLikeToggle} className="emoji-button favorite active">★</button>
         ) : (
-          <button className="emoji-button favorite">☆</button>
+          <button onClick={onLikeToggle} className="emoji-button favorite">☆</button>
         )}
-        <strong>{"description"}</strong>
-        <span> · {"location"}</span>
-        <button className="emoji-button delete">🗑</button>
+        <strong>{listing.description}</strong>
+        <span> · {listing.location}</span>
+        <button onClick={() => onDelete(listing.id)} className="emoji-button delete">🗑</button>
       </div>
     </li>
   );
